@@ -1,0 +1,53 @@
+{%extends 'common/layout.html'%}
+{% block content %}
+<a href="/depart/add/" class="layui-btn">新建部门</a>
+<table class="layui-table" lay-even>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>部门名称</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if not data_list %}
+        <tr>
+            <td colspan="3" style="color: #CCC; text-align: center;font-size: 10px;">---------暂无数据---------</td>
+        </tr>
+        {%endif%}
+        {% for obj in data_list %}
+        <tr>
+            <td>{{ obj.id }}</td>
+            <td>{{ obj.name }}</td>
+            <td>
+                <a href="/depart/edit/{{obj.id}}/" class="layui-btn layui-btn-xs">编辑</a>
+                <a href="javascript:void(0)" class="layui-btn layui-btn-danger layui-btn-xs" lay-on="delete"
+                    data="{{obj.id}}">删除</a>
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+<script>
+    layui.use(function () {
+        var layer = layui.layer;
+        var util = layui.util;
+        util.on('lay-on', {
+            delete: function () {
+                console.log(this.getAttribute('data'));
+                let id = this.getAttribute('data');
+                layer.confirm('确认删除吗？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function (index) {
+                    console.log('点击了确定');
+                    layer.close(index);
+                    window.location.href = '/depart/delete/' + id + '/';
+                }
+                );
+            }
+        })
+    })
+</script>

@@ -1,0 +1,12 @@
+{%extends 'common/form_edit.html'%}
+{% block js %}
+<script>
+    layui.use(function () {
+        var laydate = layui.laydate;
+        // 渲染
+        laydate.render({
+            elem: '#id_birthday'
+        });
+    })
+</script>
+{% endblock %}

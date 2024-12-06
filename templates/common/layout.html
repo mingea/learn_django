@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工信息管理系统</title>
+    <link href="{% static 'layui/css/layui.css' %}" rel="stylesheet">
+    <style>
+        .title {
+            background-color: #0194a4;
+            height: 80px;
+            color: #fff;
+            font-size: 30px;
+            font-weight: bold;
+            line-height: 80px;
+            padding-left: 30px;
+        }
+
+        /* 必须字段 */
+        .label-required-next:after {
+            top: 6px;
+            right: 5px;
+            color: red;
+            content: '*';
+            position: absolute;
+            margin-left: 4px;
+            font-weight: 700;
+            line-height: 1.8em;
+        }
+
+
+            {
+            % block css %
+        }
+
+            {
+            % endblock %
+        }
+    </style>
+</head>
+
+<body style="background-color: #CCC;">
+
+
+    <div class="layui-main">
+        <div class="title">
+            员工信息管理系统
+        </div>
+        <ul class="layui-nav">
+            <li class="layui-nav-item"><a href="/employee/list/">员工管理</a></li>
+            <li class="layui-nav-item">
+                <a href="/depart/list/">部门管理</a>
+            </li>
+            <li class="layui-nav-item"><a href="/familymember/list/">家庭成员</a></li>
+            <!-- 登录用户 -->
+            <li class="layui-nav-item" style="float: right;">
+                <a href="javascript:void(0);">
+                    <img src="{% static 'img/liuying.jpg' %}" class="layui-nav-img">
+                    {{request.session.user_info.name}}
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">修改密码</a></dd>
+                    <dd><a href="/user/logout/">退出</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <div class="layui-card">
+            {% block head %}{% endblock %}
+            <div class="layui-card-body">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'layui/layui.js' %}"></script>
+    <script>
+        layui.use(function () {
+            var layer = layui.layer;
+            var util = layui.util;
+            util.on('lay-on', {
+                delete: function () {
+                    console.log(this.getAttribute('data'));
+                    let id = this.getAttribute('data');
+                    layer.confirm('确认删除吗？', {
+                        btn: ['确定', '取消'] //按钮
+                    }, function (index) {
+                        console.log('点击了确定');
+                        layer.close(index);
+                        window.location.href = '/familymember/delete/' + id + '/';
+                    }
+                    );
+                }
+            })
+        })
+
+    </script>
+    {% block js %}{% endblock %}
+</body>
+
+</html>

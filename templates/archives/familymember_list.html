@@ -1,0 +1,33 @@
+{%extends 'common/layout.html'%}
+{% block content %}
+<a href="/familymember/add/" class="layui-btn">添加家庭成员</a>
+<table class="layui-table" lay-even>
+    <thead>
+        <tr>
+            <th>员工ID</th>
+            <th>姓名</th>
+            <th>家人关系</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if not data_list %}
+        <tr>
+            <td colspan="6" style="color: #CCC; text-align: center;font-size: 10px;">---------暂无数据---------</td>
+        </tr>
+        {%endif%}
+        {% for obj in data_list %}
+        <tr>
+            <td>{{ obj.employee.id }}</td>
+            <td>{{ obj.name }}</td>
+            <td>{{ obj.get_relationship_display }}</td>
+
+            <td>
+                <a href="/familymember/edit/{{obj.id}}/" class="layui-btn layui-btn-xs">编辑</a>
+                <a href="javascript:void(0)" class="layui-btn layui-btn-danger layui-btn-xs" lay-on="delete"
+                    data="{{obj.id}}">删除</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

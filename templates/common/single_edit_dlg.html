@@ -1,0 +1,58 @@
+{%extends 'common/layout_dlg.html'%}
+{% block css %}
+<style>
+    .layui-input-block {
+        margin-left: 150px;
+    }
+
+    .layui-form-label {
+        width: 120px;
+    }
+</style>
+{%endblock%}
+{%block content%}
+<div class="layui-card-body">
+    <form class="layui-form" method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="layui-form-item">
+            {% if field.field.required %}
+            <label class="layui-form-label label-required-next">{{ field.label }}：</label>
+            {% else %}
+            <label class="layui-form-label">{{ field.label }}：</label>
+            {% endif %}
+            <div class="layui-input-block">
+                {{ field }}
+                <span style="color: red">{{ field.errors.0 }}</span>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit>确认提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{%block js%}
+{% block extendsjs %}{% endblock %}
+{% for msg in messages %}
+<script>
+    layui.use(['layer'], function () {
+        var iconValue = "{{msg.tags}}" == 'success' ? 1 : 2;
+        layer.msg(
+            '{{msg}}',
+            { icon: iconValue, time: 2000 },
+            function () {
+                if ("{{msg.tags}}" == 'success') {
+                    parent.layer.close(parent.layer.getFrameIndex(window.name)); //关闭当前页
+                    parent.layui.table.reload('TableId');//重新加载父窗口表格
+                }
+            }
+        )
+    })
+</script>
+{% endfor %}
+{% endblock %}

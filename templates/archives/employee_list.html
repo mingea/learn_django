@@ -1,0 +1,120 @@
+{%extends 'common/base_list.html'%}
+{% block templet %}
+<!-- 顶部工具栏模板 -->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn  layui-btn-sm" lay-event="add">
+            <i class="layui-icon layui-icon-addition"></i>
+            新增
+        </button>
+    </div>
+    
+</script>
+<!-- 表格操作模板 -->
+<script type="text/html" id="TableBar">
+    <div class="layui-clear-space">
+        <a class="layui-btn layui-btn-xs " lay-event="edit">
+            <i class="layui-icon layui-icon-edit"></i>
+            编辑
+        </a>
+        <a class="layui-btn layui-btn-xs layui-bg-red" lay-event="delete">
+            <i class="layui-icon layui-icon-delete"></i>
+            删除
+        </a>
+    </div>
+    
+</script>
+{%endblock%}
+{% block js %}
+<script>
+    layui.use(function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            layer = layui.layer;
+        // 渲染表格
+        table.render({
+            elem: '#TableId',
+            url: '/employee/list/',
+            method: 'post',
+            toolbar: '#toolbar',
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                { type: "checkbox", width: 50 },
+                { field: 'index', width: 80, title: '序号', align: 'center', sort: true },
+                { field: 'id', width: 80, title: 'ID', align: 'center', sort: true, hide: true },
+                { field: 'job_number', width: 150, title: '工号', align: 'center', sort: true },
+                { field: 'name', width: 150, title: '姓名', align: 'center', sort: true },
+                { field: 'depart', width: 150, title: '部门', align: 'center', sort: true },
+                { field: 'gender', width: 150, title: '性别', align: 'center', sort: true },
+                { field: 'birthday', width: 150, title: '出生日期', align: 'center', sort: true },
+                { field: 'phone', width: 150, title: '手机号', align: 'center', sort: true },
+                { field: 'hiredate', width: 150, title: '入职日期', align: 'center', sort: true },
+                { title: '操作', minWidth: 240, toolbar: '#TableBar', align: "center", fixed: 'right' }
+            ]],
+            limits: [10, 20, 50, 100, 200, 500],
+            limit: 10,
+            page: true,
+            skin: 'row',
+            even: true,
+
+
+        });
+        // 工具栏事件
+        table.on('toolbar(TableFilter)', function (obj) {
+            if (obj.event === 'add') {
+                window.location.href = '/employee/add/';
+            }
+        });
+        // 单元格事件
+        table.on('tool(TableFilter)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            if (obj.event === 'edit') {
+                window.location.href = '/employee/edit/' + data.id + '/';
+            }
+            else if (obj.event === 'delete') {
+                layer.confirm('确认删除吗？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function (index) {
+                    console.log('点击了确定');
+                    layer.close(index);
+                    window.location.href = '/employee/delete/' + data.id + '/';
+                }
+                );
+            }
+        });
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            console.log(data.field)
+            var result = JSON.stringify(data.field);// 使用 JSON.stringify 方法将 data.field 转换为 JSON 字符串
+            //执行搜索重载,重载表格：通过 table.reload 方法重新加载ID为 TableId 的表格
+            table.reload('TableId', {
+                page: {
+                    curr: 1
+                },
+                where: {
+                    searchParams: result
+                }
+            }, 'data');
+            return false;
+        });
+        if (obj.event === 'edit') {
+            layer.open({
+                title: ['编辑', 'font-size:18px;font-weight:bold;'],
+                type: 2,
+                shade: 0.3,
+                maxmin: true,
+                shadeClose: true,
+                area: ['60%', '400px'],
+                content: '/employee/edit/' + data.id + '/',
+            });
+        }
+
+        //监听选择框搜索事件
+        form.on('select(select-filter)', function (data) {
+            $("#search").click()
+        });
+
+    })
+</script>
+{%endblock%}

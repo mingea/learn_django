@@ -1,0 +1,133 @@
+{%extends 'common/layout_dlg.html'%}
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工信息管理系统</title>
+    <link href="{% static 'layui/css/layui.css' %}" rel="stylesheet">
+    <style>
+        .title {
+            background-color: #0194a4;
+            height: 80px;
+            color: #fff;
+            font-size: 30px;
+            font-weight: bold;
+            line-height: 80px;
+            padding-left: 30px;
+        }
+
+        /* 必须字段 */
+        .label-required-next:after {
+            top: 6px;
+            right: 5px;
+            color: red;
+            content: '*';
+            position: absolute;
+            margin-left: 4px;
+            font-weight: 700;
+            line-height: 1.8em;
+        }
+
+
+            {
+            % block css %
+        }
+
+            {
+            % endblock %
+        }
+    </style>
+</head>
+
+<body style="background-color: #CCC;">
+    <div class="layui-main">
+        <div class="title">
+            员工信息管理系统
+        </div>
+        <ul class="layui-nav">
+            <li class="layui-nav-item"><a href="#">员工管理</a></li>
+            <li class="layui-nav-item">
+                <a href="/depart/list/">部门管理</a>
+            </li>
+            <li class="layui-nav-item"><a href="#">家庭成员</a></li>
+        </ul>
+        <div class="layui-card">
+            <div class="layui-card-header" style="font-weight: bold;">{{title}}</div>
+            {%block content%}
+            <div class="layui-card-body">
+                <form class="layui-form" method="post" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="layui-form-item">
+                        {% if field.field.required %}
+                        <label class="layui-form-label label-required-next">{{ field.label }}：</label>
+                        {% else %}
+                        <label class="layui-form-label">{{ field.label }}：</label>
+                        {% endif %}
+                        <div class="layui-input-block">
+                            {{ field }}
+                            <span style="color: red;">{{ field.errors.0 }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button type="submit" class="layui-btn" lay-submit>确认提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            {% endblock %}
+            {%block js%}
+            {% block extendsjs %}{% endblock %}
+            {% for msg in messages %}
+            <script>
+                layui.use(['layer'], function () {
+                    var iconValue = "{{msg.tags}}" == 'success' ? 1 : 2;
+                    layer.msg(
+                        '{{msg}}',
+                        { icon: iconValue, time: 2000 },
+                        function () {
+                            if ("{{msg.tags}}" == 'success') {
+                                parent.layer.close(parent.layer.getFrameIndex(window.name)); //关闭当前页
+                                parent.layui.table.reload('TableId');//重新加载父窗口表格
+                            }
+                        }
+                    )
+                })
+            </script>
+            {% endfor %}
+            {% endblock %}
+
+
+        </div>
+    </div>
+    <script src="{% static 'layui/layui.js' %}"></script>
+    <script>
+        layui.use(function () {
+            var layer = layui.layer;
+            var util = layui.util;
+            util.on('lay-on', {
+                delete: function () {
+                    console.log(this.getAttribute('data'));
+                    let id = this.getAttribute('data');
+                    layer.confirm('确认删除吗？', {
+                        btn: ['确定', '取消'] //按钮
+                    }, function (index) {
+                        console.log('点击了确定');
+                        layer.close(index);
+                        window.location.href = '/employee/delete/' + id + '/';
+                    }
+                    );
+                }
+            })
+        })
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+{%extends 'common/layout.html'%}
+{% block head%}
+<div class="layui-card-header" style="font-weight: bold;">{{ title }}</div>
+{% endblock %}
+{% block content %}
+<form class="layui-form" method="post" novalidate>
+    {% csrf_token %}
+    <div class="layui-form-item">
+        <label class="layui-form-label">部门名称：</label>
+        <div class="layui-input-block">
+
+            <input type="text" name="name" class="layui-input" placeholder="输入部门名称" required="" id="id_name"
+                value="{{row_obj.name}}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序：</label>
+        <div class="layui-input-block">
+            <input type="text" name="index" class="layui-input" placeholder="输入部门序号" required="" id="id_index">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn">确认</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

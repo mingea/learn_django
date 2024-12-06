@@ -1,0 +1,35 @@
+{%extends 'common/layout.html'%}
+{% block head%}
+<div class="layui-card-header" style="font-weight: bold;">{{title}}</div>
+{% endblock %}
+{% block content %}
+<form class="layui-form" method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="layui-form-item">
+        <!-- {% if field.field.required %}
+        <label class="layui-form-label label-required-next">{{ field.label }}：</label>
+        {% else %} -->
+        <label class="layui-form-label">{{ field.label }}：</label>
+        <!-- {% endif %} -->
+        <div class="layui-input-block">
+            <!-- {% if field.name == 'employee' %}
+            <select name="{{ field.html_name }}" id="{{ field.id_for_label }}"> -->
+            <!-- {% for dept in field.field.queryset %}
+            <option value="{{ dept.id }}">{{ dept.id }}</option>
+            {% endfor %} -->
+            <!-- </select> -->
+            <!-- {% else %} -->
+            {{ field }}
+            <!-- {% endif %} -->
+        </div>
+    </div>
+    {% endfor %}
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit>确认提交</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

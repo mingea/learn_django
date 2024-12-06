@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工信息管理系统</title>
+    <link href="{%static 'layui/css/layui.css'%}" rel="stylesheet">
+    <style>
+        body {
+            background:url("{% static 'img/login.jpg'%}") 0% 0% / cover no-repeat;
+            font-size: 12px;
+        }
+
+        .main-body {
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+            width: 428px;
+            background-color: #fff;
+            border-radius: 12px;
+        }
+
+        .login-top {
+            height: 117px;
+            background-color: #148be4;
+            border-radius: 12px 12px 0 0;
+            font-size: 30px;
+            font-weight: 400;
+            font-stretch: normal;
+            color: #fff;
+            line-height: 117px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .login-top .bg1 {
+            display: inline-block;
+            width: 74px;
+            height: 74px;
+            opacity: .1;
+            border-radius: 0 74px 0 0;
+            position: absolute;
+            left: 0;
+            top: 43px;
+            background-color: #fff;
+        }
+
+        .login-top .bg2 {
+            display: inline-block;
+            width: 94px;
+            height: 94px;
+            opacity: .1;
+            border-radius: 50%;
+            position: absolute;
+            right: -16px;
+            top: -16px;
+            background-color: #fff;
+        }
+
+        .center {
+            width: 288px;
+            margin: 0 auto;
+            padding-top: 40px;
+            padding-bottom: 15px;
+            position: relative;
+        }
+
+        .login-btn {
+            width: 288px;
+            height: 40px;
+            background-color: #1E9FFF;
+            border-radius: 16px;
+            margin: 24px auto 0;
+            text-align: center;
+            line-height: 40px;
+            color: #fff;
+            font-size: 14px;
+            letter-spacing: 0;
+            cursor: pointer;
+            border: none;
+        }
+
+        .center {
+            width: 288px;
+            margin: 0 auto;
+            padding-top: 40px;
+            padding-bottom: 15px;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-body">
+        <div class="login-top">
+            <span>员工信息管理系统</span>
+            <span class="bg1"></span>
+            <span class="bg2"></span>
+
+        </div>
+        <div>
+            <form class="layui-form" method="post" novalidate>
+                {% csrf_token %}
+
+                {% for field in form %}
+                {% if field.label == '验证码' %}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{{field.label}}</label>
+                    <div class="layui-input-block">
+                        {{field}}
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center; height: 5vh;">
+                    <img id="captchaImage" alt="点击刷新" src="/image/code/" width="120px" height="45px"
+                        style="cursor: pointer; ">
+                </div>
+                <div>
+                    <span style="color: red">{{ form.captcha.errors.0 }}</span>
+                </div>
+
+                {% else %}
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{{field.label}}</label>
+                    <div class="layui-input-block">
+                        {{field}}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="submit" class="layui-btn" lay-submit>确认提交</button>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+
+    <script src="{%static 'layui/layui.js'%}"></script>
+    <script>
+        layui.use(function () {
+            var $ = layui.jquery;
+            // 点击验证码进行刷新
+            $('#captchaImage').click(function () {
+                $(this).attr('src', '/image/code/?random=' + Math.random());
+            })
+            var layer = layui.layer;
+            {% for msg in messages %}
+            layer.alert('{{ msg}}');
+            {% endfor %}
+
+
+        });     
+    </script>
+</body>
+
+</html>

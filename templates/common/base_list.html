@@ -1,0 +1,43 @@
+{%extends 'common/layout.html'%}
+{%block content%}
+<div class="layui-card-body">
+    <!-- 查询操作区一 -->
+    <div class="layui-collapse" style="margin-bottom: 10px;">
+        <div class="layui-colla-item">
+            <div class="layui-colla-title">查询</div>
+            <div class="layui-colla-content layui-show">
+                {% block query%}
+                <form class="layui-form" novalidate>
+                    <div class="layui-form-item">
+                        {% for field in form %}
+                        <div class="layui-inline">
+                            <label class="layui-form-label w-auto">{{ field.label }}: </label>
+                            <div class="layui-input-inline">
+                                {{ field }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="layui-inline" style="float: right;">
+                            <div class="layui-input-inline" style="width: auto;">
+                                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="data-search-btn"
+                                    id="search"><i class="layui-icon layui-icon-search"></i>查 询
+                                </button>
+                                <button class="layui-btn layui-btn-primary"><i
+                                        class="layui-icon layui-icon-refresh"></i> 重
+                                    置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                {%endblock%}
+            </div>
+        </div>
+    </div>
+    <!-- 表格区域 -->
+    <div class="layui-form layui-table-box">
+        <table class="layui-hide" id="TableId" lay-filter="TableFilter"></table>
+    </div>
+</div>
+{% block templet %}{% endblock %}
+{% endblock %}
